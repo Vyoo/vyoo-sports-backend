@@ -1,0 +1,219 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Vyoo Sports :: Playground</title>
+  </head>
+  <body style="margin: 0; padding: 0;">
+    <div id="viewport">Loading...</div>
+
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+    <script type="text/plain" id="parameters">{{PARAMETERS}}</script>
+
+    <script type="text/babel">
+      const { baseUri, loginUri } = JSON.parse(document.getElementById('parameters').innerText)
+
+      const loginUrl = new URL(loginUri)
+
+      let log, accessToken, idToken, refreshToken, expiresAt, tokenType
+
+      const get = async (uri, query) => {
+        const url = new URL(`${baseUri}/${uri}`)
+
+        if (query) {
+          Object.entries(query).forEach(([key, value]) => {
+            query.searchParams.set(key, value)
+          })
+        }
+
+        const headers = {
+          accept: 'application/json',
+        }
+
+        if (accessToken) {
+          headers.authorization = `Bearer ${accessToken}`
+        }
+
+        if (idToken) {
+          headers['x-id-token'] = idToken
+        }
+
+        log([['HTTP request', `GET ${url}`, `Headers: ${JSON.stringify(headers, null, 2)}`]])
+
+        const res = await fetch(url, { method: 'GET', headers })
+
+        if (res.status === 200) {
+          const data = await res.json()
+          log([['HTTP response 200', `GET ${url}`, JSON.stringify(data, null, 2)]])
+          return data
+        }
+
+        const text = await res.text()
+
+        log([[`HTTP response ${res.status}`, `GET ${url}`, text]])
+
+        throw new Error(`HTTP response status ${res.status}\r\n${text}`)
+      }
+
+      const App = () => {
+        return (
+          <div style={{ width: '100vw', height: '100vh', display: 'flex', flexDirection: 'row' }}>
+            <div style={{ flex: 0, display: 'flex', borderRight: '1px solid #ccc' }}>
+              <div><Controls /></div>
+            </div>
+            <div style={{ flex: 1, display: 'flex', borderRight: '1px solid #ccc', position: 'relative' }}>
+              <Log />
+            </div>
+          </div>
+        )
+      }
+
+      const Controls = () => {
+        return (
+          <div>
+            <input
+              type="button"
+              value="Who am I?"
+              onClick={() => {
+                get('latest/auth/whoami')
+              }}
+            />
+            <input
+              type="button"
+              value="Google Sign-In"
+              onClick={() => {
+                log([['Opening Google sign-in popup']])
+                window.open(loginUrl.toString(), '_blank', 'popup')
+              }}
+            />
+          </div>
+        )
+      }
+
+      const Log = () => {
+        const targetRef = React.useRef()
+
+        log = entry => {
+          if (targetRef.current) {
+            let type
+
+            if (!Array.isArray(entry)) {
+              type = entry.type
+              entry = entry.entry
+            }
+
+            const ele = (
+              <LogEntry type={type}>
+                {entry.map((section, index) => (
+                  <LogEntry.Section key={index}>
+                    {section.map((block, index) => (
+                      <LogEntry.Block key={index}>
+                        {block}
+                      </LogEntry.Block>
+                    ))}
+                  </LogEntry.Section>
+                ))}
+              </LogEntry>
+            )
+
+            const e = document.createElement('li')
+            targetRef.current.insertAdjacentElement('afterbegin', e)
+            ReactDOM.createRoot(e).render(ele)
+          }
+        }
+
+        window.addEventListener('message', message => {
+          console.log('message:', message)
+
+          if (message.data) {
+            let entry
+
+            if (message.data.tokenResponse) {
+              const tokenResponse = JSON.parse(message.data.tokenResponse)
+
+              const {
+                access_token: at,
+                id_token: it,
+                refresh_token: rt,
+                expires_in: ei,
+                token_type: tt,
+              } = typeof tokenResponse === 'object' ? tokenResponse : {}
+
+              if (tt === 'Bearer' && at && it && rt && ei) {
+                entry = [
+                  ['Access Token:', at],
+                  ['ID Token:', it],
+                  ['Refresh Token:', rt],
+                  [`Expires In: ${ei}`],
+                ]
+
+                accessToken = at
+                idToken = it
+                refreshToken = rt
+                expiresAt = new Date(+new Date() + ei * 1000)
+                tokenType = tt
+              } else {
+                entry = {
+                  type: 'error',
+                  entry: [
+                    ['Failed to get auth tokens:', JSON.stringify(tokenResponse, null, 2)]
+                  ]
+                }
+              }
+            }
+
+            if (entry) {
+              log(entry)
+            }
+          }
+        })
+
+        return (
+          <div style={{ position: 'absolute', left: 0, top: 0, right: 0, bottom: 0, overflow: 'scroll' }}>
+            <ol ref={targetRef} style={{ fontFamily: 'monospace' }}>
+              <li><LogEntry>Playground initialized</LogEntry></li>
+            </ol>
+          </div>
+        )
+      }
+
+      const LogEntry = ({ timestamp, type, children }) => {
+        const color = {
+          error: '#a00',
+        }[type] || '#000'
+
+        return (
+          <div style={{ display: 'flex', flexDirection: 'row' }}>
+            <div style={{ flex: 0, whiteSpace: 'nowrap', color: '#5c81e2' }}>
+              {(timestamp || new Date()).toISOString().substr(11, 12).padEnd(12, '0')}&nbsp;&nbsp;&nbsp;
+            </div>
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', color }}>
+              {children}
+            </div>
+          </div>
+        )
+      }
+
+      LogEntry.Block = ({ children }) => {
+        return (
+          <pre style={{ margin: 0, paddingBottom: 4 }}>
+            {children}
+          </pre>
+        )
+      }
+
+      LogEntry.Section = ({ children }) => {
+        return (
+          <div style={{ margin: 0, paddingBottom: 8 }}>
+            {children}
+          </div>
+        )
+      }
+
+      const root = ReactDOM.createRoot(document.getElementById('viewport'))
+      root.render(<App />)
+    </script>
+  </body>
+</html>

@@ -1,0 +1,38 @@
+name: Serverless Deploy
+on: [ push ]
+jobs:
+  sls-deploy:
+    name: Builds and deploys serverless services
+    environment: ${{ github.head_ref || github.ref_name }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+
+      - name: Install node packages
+        run: npm i -g serverless && node .yarn/releases/yarn-3.2.1.cjs
+
+      # - name: Configure AWS credentials
+      #   uses: aws-actions/configure-aws-credentials@v1
+      #   with:
+      #     aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      #     aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      #     aws-region: ${{ secrets.AWS_REGION }}
+
+      # - name: Deploy serverless services
+      #   uses: serverless/github-action@v3.1
+      #   with:
+      #     args: deploy
+      #   env:
+      #     SERVERLESS_ACCESS_KEY: ${{ secrets.SERVERLESS_ACCESS_KEY }}
+      #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+      - name: Deploy services
+        run: ./node_modules/.bin/serverless deploy --stage ${{ secrets.STAGE || github.head_ref || github.ref_name }}
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          SERVERLESS_ACCESS_KEY: ${{ secrets.SERVERLESS_ACCESS_KEY }}
+          PARAMETER_STORE_PREFIX: /vyoo-sports-backend/${{ github.head_ref || github.ref_name }},/vyoo-sports-backend/default

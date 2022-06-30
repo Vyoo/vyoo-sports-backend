@@ -1,0 +1,25 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Vyoo Sports :: Playground</title>
+  </head>
+  <body style="margin: 0; padding: 0;">
+    <div>Obtaining tokens...</div>
+
+    <script type="text/plain" id="parameters">{{PARAMETERS}}</script>
+
+    <script>
+      const { tokenReq, code } = JSON.parse(document.getElementById('parameters').innerText)
+
+      const { uri, ...req } = tokenReq
+
+      const promise = fetch(uri, req)
+
+      promise.then(async res => {
+        const text = await res.text()
+        window.opener.postMessage({ tokenResponse: text })
+        window.close()
+      })
+    </script>
+  </body>
+</html>

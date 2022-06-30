@@ -1,0 +1,76 @@
+{
+  "compilerOptions": {
+    "allowJs": false,
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": ".",
+    "composite": false,
+    "downlevelIteration": true,
+    "emitDecoratorMetadata": false,
+    "esModuleInterop": true,
+    "exactOptionalPropertyTypes": true,
+    "experimentalDecorators": true,
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,
+    "inlineSourceMap": false,
+    "inlineSources": false,
+    "lib": ["ESNext", "DOM"],
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "outDir": ".typescript",
+    "noEmit": false,
+    "noEmitOnError": true,
+    "noErrorTruncation": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitAny": true,
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noImplicitUseStrict": false,
+    "noResolve": false,
+    "noStrictGenericChecks": false,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "paths": {
+      "~/*": [
+        "./packages/resources.app/*",
+        "./packages/playground.app/*",
+        "./packages/soccer.app/*",
+        "./packages/sports.admin.app/*",
+        "./packages/sports.app/*",
+        "./packages/sports.lib/*",
+        "./packages/utils/*",
+        "./framework/core/*",
+        "./framework/di/*",
+        "./framework/http/*",
+        "./framework/logging/*",
+        "./framework/serverless/*",
+        "./framework/utils/*"
+      ],
+      "$/*": ["./packages/*"],
+      "&/*": ["./framework/*"],
+      "^/*": ["./*"],
+      "framework/*": ["{invalid}/*"],
+      "packages/*": ["{invalid}/*"]
+    },
+    "resolveJsonModule": true,
+    "strict": true,
+    "strictPropertyInitialization": true,
+    "sourceMap": true,
+    "target": "ES2022"
+  },
+  "include": [
+    "serverless.ts"
+  ],
+  "exclude": [
+    "node_modules/**/*",
+    ".serverless/**/*",
+    ".webpack/**/*",
+    "_warmup/**/*",
+    ".vscode/**/*"
+  ],
+  "ts-node": {
+    "require": [
+      "tsconfig-paths/register"
+    ]
+  }
+}

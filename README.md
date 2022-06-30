@@ -1,0 +1,1 @@
+[![Serverless Deploy - dev stage](https://github.com/Vyoo/vyoo-sports-backend/actions/workflows/sls-deploy-dev.yml/badge.svg?event=push)](https://github.com/Vyoo/vyoo-sports-backend/actions/workflows/sls-deploy-dev.yml)
