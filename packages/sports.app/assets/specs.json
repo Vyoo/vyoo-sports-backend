@@ -1,0 +1,666 @@
+[
+  {
+    "version": "2022-01-01",
+    "spec": {
+      "openapi": "3.0.3",
+      "info": {
+        "title": "Vyoo Sports",
+        "version": "2022-01-01"
+      },
+      "security": [
+        {
+          "openid": []
+        }
+      ],
+      "paths": {
+        "/2022-01-01/soccer/create-league": {
+          "post": {
+            "responses": {
+              "200": {
+                "description": "success",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "required": [
+                        "league"
+                      ],
+                      "properties": {},
+                      "additionalProperties": false
+                    }
+                  }
+                }
+              }
+            },
+            "parameters": [],
+            "requestBody": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "required": [
+                      "name",
+                      "location",
+                      "vision",
+                      "mission",
+                      "about"
+                    ],
+                    "properties": {
+                      "name": {
+                        "type": "string",
+                        "title": "League name"
+                      },
+                      "location": {
+                        "type": "object",
+                        "required": [
+                          "lat",
+                          "lng",
+                          "address"
+                        ],
+                        "properties": {
+                          "lat": {
+                            "type": "number",
+                            "title": "Map point latitude"
+                          },
+                          "lng": {
+                            "type": "number",
+                            "title": "Map point longitude"
+                          },
+                          "address": {
+                            "type": "string",
+                            "title": "Address as text"
+                          }
+                        },
+                        "additionalProperties": false,
+                        "title": "League location"
+                      },
+                      "vision": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "League vision"
+                      },
+                      "mission": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "League mission"
+                      },
+                      "about": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "About the league"
+                      }
+                    },
+                    "additionalProperties": false,
+                    "title": "League data"
+                  }
+                }
+              }
+            }
+          },
+          "parameters": []
+        },
+        "/2022-01-01/soccer/hello": {
+          "get": {
+            "responses": {
+              "200": {
+                "description": "success",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "required": [
+                        "message"
+                      ],
+                      "properties": {
+                        "message": {
+                          "type": "string"
+                        }
+                      },
+                      "additionalProperties": false
+                    }
+                  }
+                }
+              }
+            },
+            "parameters": []
+          },
+          "parameters": []
+        },
+        "/2022-01-01/soccer/list-leagues": {
+          "get": {
+            "responses": {
+              "200": {
+                "description": "success",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "required": [
+                        "leagues"
+                      ],
+                      "properties": {
+                        "leagues": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "required": [
+                              "id",
+                              "name",
+                              "location"
+                            ],
+                            "properties": {
+                              "id": {
+                                "type": "string"
+                              },
+                              "name": {
+                                "type": "string"
+                              },
+                              "location": {
+                                "type": "object",
+                                "required": [
+                                  "lat",
+                                  "lng",
+                                  "address"
+                                ],
+                                "properties": {
+                                  "lat": {
+                                    "type": "number"
+                                  },
+                                  "lng": {
+                                    "type": "number"
+                                  },
+                                  "address": {
+                                    "type": "string",
+                                    "nullable": true
+                                  }
+                                },
+                                "additionalProperties": false
+                              }
+                            },
+                            "additionalProperties": false
+                          }
+                        }
+                      },
+                      "additionalProperties": false
+                    }
+                  }
+                }
+              }
+            },
+            "parameters": [
+              {
+                "in": "query",
+                "name": "search",
+                "required": false,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            ]
+          },
+          "parameters": []
+        },
+        "/2022-01-01/auth/complete": {
+          "get": {
+            "responses": {
+              "200": {
+                "description": "success"
+              }
+            },
+            "parameters": [
+              {
+                "in": "query",
+                "name": "code",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "in": "query",
+                "name": "state",
+                "required": false,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            ]
+          },
+          "parameters": []
+        },
+        "/2022-01-01/auth/flow": {
+          "get": {
+            "responses": {
+              "200": {
+                "description": "success",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "required": [
+                        "domain",
+                        "clientId",
+                        "scopes",
+                        "callbackUrls",
+                        "logoutUrls"
+                      ],
+                      "properties": {
+                        "domain": {
+                          "type": "string"
+                        },
+                        "clientId": {
+                          "type": "string"
+                        },
+                        "scopes": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "callbackUrls": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "logoutUrls": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      },
+                      "additionalProperties": false
+                    }
+                  }
+                }
+              }
+            },
+            "parameters": []
+          },
+          "parameters": []
+        },
+        "/2022-01-01/auth/login": {
+          "get": {
+            "responses": {
+              "200": {
+                "description": "success"
+              }
+            },
+            "parameters": []
+          },
+          "parameters": []
+        },
+        "/2022-01-01/auth/whoami": {
+          "get": {
+            "responses": {
+              "200": {
+                "description": "success",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "required": [
+                        "roles"
+                      ],
+                      "properties": {
+                        "roles": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      },
+                      "additionalProperties": false
+                    }
+                  }
+                }
+              }
+            },
+            "parameters": []
+          },
+          "parameters": []
+        }
+      },
+      "components": {
+        "securitySchemes": {
+          "openid": {
+            "type": "openIdConnect"
+          }
+        }
+      }
+    }
+  },
+  {
+    "version": "latest",
+    "spec": {
+      "openapi": "3.0.3",
+      "info": {
+        "title": "Vyoo Sports",
+        "version": "latest"
+      },
+      "security": [
+        {
+          "openid": []
+        }
+      ],
+      "paths": {
+        "/latest/soccer/create-league": {
+          "post": {
+            "responses": {
+              "200": {
+                "description": "success",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "required": [
+                        "league"
+                      ],
+                      "properties": {},
+                      "additionalProperties": false
+                    }
+                  }
+                }
+              }
+            },
+            "parameters": [],
+            "requestBody": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "required": [
+                      "name",
+                      "location",
+                      "vision",
+                      "mission",
+                      "about"
+                    ],
+                    "properties": {
+                      "name": {
+                        "type": "string",
+                        "title": "League name"
+                      },
+                      "location": {
+                        "type": "object",
+                        "required": [
+                          "lat",
+                          "lng",
+                          "address"
+                        ],
+                        "properties": {
+                          "lat": {
+                            "type": "number",
+                            "title": "Map point latitude"
+                          },
+                          "lng": {
+                            "type": "number",
+                            "title": "Map point longitude"
+                          },
+                          "address": {
+                            "type": "string",
+                            "title": "Address as text"
+                          }
+                        },
+                        "additionalProperties": false,
+                        "title": "League location"
+                      },
+                      "vision": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "League vision"
+                      },
+                      "mission": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "League mission"
+                      },
+                      "about": {
+                        "type": "string",
+                        "nullable": true,
+                        "title": "About the league"
+                      }
+                    },
+                    "additionalProperties": false,
+                    "title": "League data"
+                  }
+                }
+              }
+            }
+          },
+          "parameters": []
+        },
+        "/latest/soccer/hello": {
+          "get": {
+            "responses": {
+              "200": {
+                "description": "success",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "required": [
+                        "message"
+                      ],
+                      "properties": {
+                        "message": {
+                          "type": "string"
+                        }
+                      },
+                      "additionalProperties": false
+                    }
+                  }
+                }
+              }
+            },
+            "parameters": []
+          },
+          "parameters": []
+        },
+        "/latest/soccer/list-leagues": {
+          "get": {
+            "responses": {
+              "200": {
+                "description": "success",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "required": [
+                        "leagues"
+                      ],
+                      "properties": {
+                        "leagues": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "required": [
+                              "id",
+                              "name",
+                              "location"
+                            ],
+                            "properties": {
+                              "id": {
+                                "type": "string"
+                              },
+                              "name": {
+                                "type": "string"
+                              },
+                              "location": {
+                                "type": "object",
+                                "required": [
+                                  "lat",
+                                  "lng",
+                                  "address"
+                                ],
+                                "properties": {
+                                  "lat": {
+                                    "type": "number"
+                                  },
+                                  "lng": {
+                                    "type": "number"
+                                  },
+                                  "address": {
+                                    "type": "string",
+                                    "nullable": true
+                                  }
+                                },
+                                "additionalProperties": false
+                              }
+                            },
+                            "additionalProperties": false
+                          }
+                        }
+                      },
+                      "additionalProperties": false
+                    }
+                  }
+                }
+              }
+            },
+            "parameters": [
+              {
+                "in": "query",
+                "name": "search",
+                "required": false,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            ]
+          },
+          "parameters": []
+        },
+        "/latest/auth/complete": {
+          "get": {
+            "responses": {
+              "200": {
+                "description": "success"
+              }
+            },
+            "parameters": [
+              {
+                "in": "query",
+                "name": "code",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "in": "query",
+                "name": "state",
+                "required": false,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            ]
+          },
+          "parameters": []
+        },
+        "/latest/auth/flow": {
+          "get": {
+            "responses": {
+              "200": {
+                "description": "success",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "required": [
+                        "domain",
+                        "clientId",
+                        "scopes",
+                        "callbackUrls",
+                        "logoutUrls"
+                      ],
+                      "properties": {
+                        "domain": {
+                          "type": "string"
+                        },
+                        "clientId": {
+                          "type": "string"
+                        },
+                        "scopes": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "callbackUrls": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "logoutUrls": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      },
+                      "additionalProperties": false
+                    }
+                  }
+                }
+              }
+            },
+            "parameters": []
+          },
+          "parameters": []
+        },
+        "/latest/auth/login": {
+          "get": {
+            "responses": {
+              "200": {
+                "description": "success"
+              }
+            },
+            "parameters": []
+          },
+          "parameters": []
+        },
+        "/latest/auth/whoami": {
+          "get": {
+            "responses": {
+              "200": {
+                "description": "success",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "required": [
+                        "roles"
+                      ],
+                      "properties": {
+                        "roles": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      },
+                      "additionalProperties": false
+                    }
+                  }
+                }
+              }
+            },
+            "parameters": []
+          },
+          "parameters": []
+        }
+      },
+      "components": {
+        "securitySchemes": {
+          "openid": {
+            "type": "openIdConnect"
+          }
+        }
+      }
+    }
+  }
+]

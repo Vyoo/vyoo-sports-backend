@@ -1,0 +1,5 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="sls offline:sports" type="NodeJSConfigurationType" application-parameters="sports:offline" path-to-js-file="node_modules/serverless/bin/serverless.js" working-dir="$PROJECT_DIR$">
+    <method v="2" />
+  </configuration>
+</component>

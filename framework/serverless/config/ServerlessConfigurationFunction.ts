@@ -1,0 +1,5 @@
+import type ServerlessConfigurationFunctions from './ServerlessConfigurationFunctions'
+
+type ServerlessConfigurationFunction = ServerlessConfigurationFunctions[string]
+
+export default ServerlessConfigurationFunction
